@@ -245,7 +245,7 @@ class Client extends BaseXChainClient implements BinanceClient, XChainClient {
         if (key === 'startTime' && !params['endTime']) {
           url.searchParams.set('endTime', (parseInt(value) + diffTime).toString())
         }
-        if (key === 'endTime' && !params['startTime']) {
+        else if (key === 'endTime' && !params['startTime']) {
           url.searchParams.set('startTime', (parseInt(value) - diffTime).toString())
         }
       }
