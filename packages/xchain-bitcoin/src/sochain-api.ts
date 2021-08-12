@@ -97,12 +97,7 @@ export const getUnspentTxs = async ({
   address,
   startingFromTxId,
 }: AddressParams): Promise<BtcAddressUTXO[]> => {
-  let resp = null
-  if (startingFromTxId) {
-    resp = await axios.get(`${sochainUrl}/get_tx_unspent/${toSochainNetwork(network)}/${address}/${startingFromTxId}`)
-  } else {
-    resp = await axios.get(`${sochainUrl}/get_tx_unspent/${toSochainNetwork(network)}/${address}`)
-  }
+  const resp = await axios.get(`${sochainUrl}/get_tx_unspent/${toSochainNetwork(network)}/${address}` + startingFromTxId ? `/${startingFromTxId}` : '')
   const response: SochainResponse<BtcUnspentTxsDTO> = resp.data
   const txs = response.data.txs
   if (txs.length === 100) {
