@@ -327,17 +327,17 @@ export enum AssetCurrencySymbol {
  * @returns {string} The currency symbol from the given asset.
  */
 export const currencySymbolByAsset = ({ ticker }: Asset) => {
-  switch (true) {
-    case ticker === RUNE_TICKER:
+  switch (ticker) {
+    case RUNE_TICKER:
       return AssetCurrencySymbol.RUNE
-    case ticker === AssetBTC.ticker:
+    case AssetBTC.ticker:
       return AssetCurrencySymbol.BTC
-    case ticker === AssetETH.ticker:
+    case AssetETH.ticker:
       return AssetCurrencySymbol.ETH
-    case ticker.includes('USD'):
-      return AssetCurrencySymbol.USD
     default:
-      return ticker
+      return ticker.includes('USD')
+        ? AssetCurrencySymbol.USD
+        : ticker
   }
 }
 
