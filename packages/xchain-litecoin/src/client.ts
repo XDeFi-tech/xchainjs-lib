@@ -199,7 +199,7 @@ class Client extends UTXOClient {
       throw new Error('Could not get private key from phrase')
     }
 
-    return master.privateKey.toString('hex')
+    return master.toWIF()
   }
 
   /**
