@@ -39,6 +39,14 @@ describe('BitcoinClient Test', () => {
   const phraseTwoMainnet_path0 = 'bc1qsn4ujsja3ukdlzjmc9tcgpeaxeauq0ga83xmds'
   const phraseTwoMainnet_path1 = 'bc1q7c58pf87g73pk07ryq996jfa5nqkx2ppzjz8kq'
 
+  it('should return private key', async () => {
+    const privateKey0 = btcClient.getPrivateHex(phraseOne, 0)
+    const privateKey1 = btcClient.getPrivateHex(phraseOne, 1)
+
+    expect(privateKey0).toEqual('KxRvc4kEst3ms97hnpKK3A68zFigHsLzWTyJ7Ljvs5GVE9gc1sFk')
+    expect(privateKey1).toEqual('L5dB2aFzUWiW7maWmwqBRQ5jdd8aFoyqekjLQYa8oCRPPxhoaVUA')
+  })
+
   it('set phrase should return correct address', () => {
     btcClient.setNetwork('testnet' as Network)
     const result = btcClient.setPhrase(phraseOne)

@@ -31,6 +31,15 @@ describe('LitecoinClient Test', () => {
   const phraseThree = 'quantum vehicle print stairs canvas kid erode grass baby orbit lake remove'
   const addyThree = 'tltc1q04y2lnt0ausy07vq9dg5w2rnn9yjl3rz364adu'
 
+  it('should return private key', async () => {
+    ltcClient.setNetwork('mainnet' as Network)
+    const privateKey0 = ltcClient.getPrivateHex(phraseOne, 0)
+    const privateKey1 = ltcClient.getPrivateHex(phraseOne, 1)
+
+    expect(privateKey0).toEqual('T4LU5wjswRWSy5HcBvVPnZJ1aYVb83afjaammFymYVa4hy3JMBYP')
+    expect(privateKey1).toEqual('T6H7gjG7wtaGcaZ1cShXBAVV3CH3GEuVbt3cGT8ovqoyxBAjnJU5')
+  })
+
   it('set phrase should return correct address', () => {
     ltcClient.setNetwork('testnet' as Network)
     const result = ltcClient.setPhrase(phraseOne)

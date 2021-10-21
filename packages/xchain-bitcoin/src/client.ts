@@ -17,6 +17,7 @@ import {
 import { getSeed } from '@xchainjs/xchain-crypto'
 import { AssetBTC, Chain, assetAmount, assetToBase } from '@xchainjs/xchain-util'
 import * as Bitcoin from 'bitcoinjs-lib'
+import wif from 'wif'
 
 import { BTC_DECIMAL } from './const'
 import * as sochain from './sochain-api'
@@ -161,6 +162,29 @@ class Client extends UTXOClient {
     }
 
     return Bitcoin.ECPair.fromPrivateKey(master.privateKey, { network: btcNetwork })
+  }
+
+  /**
+   * Get private key.
+   *
+   * Private function to get Private Key from the this.phrase
+   *
+   * @param {string} phrase The phrase to be used for generating privkey
+   * @param {number} index account index for the derivation path
+   * @returns {string} The privkey generated from the given phrase
+   *
+   * @throws {"Could not get private key from phrase"} Throws an error if failed creating BTC keys from the given phrase
+   * */
+  getPrivateHex(phrase: string, index = 0): string {
+    const btcNetwork = Utils.btcNetwork(this.network)
+
+    const seed = getSeed(phrase)
+    const master = Bitcoin.bip32.fromSeed(seed, btcNetwork).derivePath(this.getFullDerivationPath(index))
+    if (!master.privateKey) {
+      throw new Error('Could not get private key from phrase')
+    }
+
+    return wif.encode(this.network === Network.Mainnet ? 128 : 239, master.privateKey, true)
   }
 
   /**

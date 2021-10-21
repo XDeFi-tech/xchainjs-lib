@@ -1,11 +1,11 @@
 import { Network, TxsPage } from '@xchainjs/xchain-client'
 import { CosmosSDKClient, RPCResponse, RPCTxSearchResult, TxResponse } from '@xchainjs/xchain-cosmos'
-import { BaseAmount, assetAmount, assetToBase, baseAmount } from '@xchainjs/xchain-util'
+import { AssetRuneNative, BaseAmount, assetAmount, assetToBase, baseAmount } from '@xchainjs/xchain-util'
 import { BaseAccount, BroadcastTxCommitResult, Coin } from 'cosmos-client/api'
 import nock from 'nock'
 
 import { Client } from '../src/client'
-import { AssetRune, ThorchainDepositResponse } from '../src/types'
+import { ThorchainDepositResponse } from '../src/types'
 
 const mockAccountsAddress = (
   url: string,
@@ -72,6 +72,13 @@ describe('Client Test', () => {
   afterEach(() => {
     thorClient.purgeClient()
     thorMainClient.purgeClient()
+  })
+
+  it('should return private key', async () => {
+    const privateKey0 = thorClient.getPrivateHex(phrase, 0)
+    const privateKey1 = thorClient.getPrivateHex(phrase, 1)
+
+    expect(privateKey0.length).toEqual(privateKey1.length)
   })
 
   it('should start with empty wallet', async () => {
@@ -199,7 +206,7 @@ describe('Client Test', () => {
 
     const balances = await thorMainClient.getBalance('thor147jegk6e9sum7w3svy3hy4qme4h6dqdkgxhda5')
     expect(balances.length).toEqual(1)
-    expect(balances[0].asset).toEqual(AssetRune)
+    expect(balances[0].asset).toEqual(AssetRuneNative)
     expect(balances[0].amount.amount().isEqualTo(baseAmount(100).amount())).toBeTruthy()
   })
 
@@ -244,7 +251,7 @@ describe('Client Test', () => {
 
     expect(type).toEqual('transfer')
     expect(hash).toEqual(txHash)
-    expect(asset).toEqual(AssetRune)
+    expect(asset).toEqual(AssetRuneNative)
     expect(from[0].from).toEqual(address)
     expect(from[0].amount.amount().toString()).toEqual(assetToBase(assetAmount(0.02)).amount().toString())
     expect(from[1].from).toEqual(address)
@@ -293,7 +300,7 @@ describe('Client Test', () => {
     assertTxsPost(thorClient.getClientUrl().node, memo, expected_txsPost_result)
 
     const result = await thorClient.transfer({
-      asset: AssetRune,
+      asset: AssetRuneNative,
       recipient: to_address,
       amount: send_amount,
       memo,
@@ -366,7 +373,7 @@ describe('Client Test', () => {
     assertTxsPost(thorClient.getClientUrl().node, '', expected_txsPost_result)
 
     const result = await thorClient.deposit({
-      asset: AssetRune,
+      asset: AssetRuneNative,
       amount: send_amount,
       memo,
     })
@@ -383,7 +390,7 @@ describe('Client Test', () => {
 
     expect(type).toEqual('transfer')
     expect(hash).toEqual(txHash)
-    expect(asset).toEqual(AssetRune)
+    expect(asset).toEqual(AssetRuneNative)
     expect(from[0].from).toEqual(address)
     expect(from[0].amount.amount().toString()).toEqual(assetToBase(assetAmount(0.02)).amount().toString())
     expect(from[1].from).toEqual(address)

@@ -167,6 +167,8 @@ class Client implements CosmosClient, XChainClient {
    * @private
    * Get private key.
    *
+   * @param {string} phrase The phrase to be used for generating privkey
+   * @param {number} index The derivation path suffix
    * @returns {PrivKey} The private key generated from the given phrase
    *
    * @throws {"Phrase not set"}
@@ -177,6 +179,23 @@ class Client implements CosmosClient, XChainClient {
 
     return this.getSDKClient().getPrivKeyFromMnemonic(this.phrase, this.getFullDerivationPath(index))
   }
+
+  /**
+   * Get private key.
+   *
+   * @param {string} phrase The phrase to be used for generating privkey
+   * @param {number} index account index for the derivation path
+   * @returns {string} The private key generated from the given phrase
+   *
+   * @throws {"Phrase not set"}
+   * Throws an error if phrase has not been set before
+   * */
+  getPrivateHex(phrase: string, index = 0): string {
+    if (!phrase) throw new Error('Phrase not set')
+
+    return this.getSDKClient().getPrivKeyFromMnemonic(phrase, this.getFullDerivationPath(index)).toBase64()
+  }
+
   getSDKClient(): CosmosSDKClient {
     return this.sdkClients.get(this.network) || TESTNET_SDK
   }

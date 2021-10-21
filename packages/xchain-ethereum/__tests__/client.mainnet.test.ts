@@ -27,6 +27,20 @@ describe('Client Test', () => {
     nock.cleanAll()
   })
 
+  it('should return private key', async () => {
+    const ethClient = new Client({
+      network: 'mainnet' as Network,
+      phrase,
+      ethplorerUrl,
+    })
+
+    const privateKey0 = ethClient.getPrivateHex(phrase, 0)
+    const privateKey1 = ethClient.getPrivateHex(phrase, 1)
+
+    expect(privateKey0).toEqual('0x739172c3520ea86ad6238b4f303cc09da6ca7254c76af1a1e8fa3fb00eb5c16f')
+    expect(privateKey1).toEqual('0x6da150d80d8931fb16494bf53fec1cb27acac72ba0a4f01cb8119fed9e5e133c')
+  })
+
   it('derive path correctly with bip44', () => {
     const ethClient = new Client({
       network: 'mainnet' as Network,
